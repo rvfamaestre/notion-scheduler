@@ -1,0 +1,85 @@
+%% Notion Task Scheduler automation flow (Mermaid)
+flowchart TD
+    trigger([Scheduler Trigger<br/>Daily cron or manual]):::actor
+
+    subgraph data_sources[Notion Inputs]
+        direction LR
+        templates((Recurring Templates))
+        incomplete((Incomplete Scheduled))
+    end
+
+    subgraph managers[Service Managers]
+        direction LR
+        notion[[NotionTaskManager]]
+        calendar[[CalendarManager]]
+    end
+
+    subgraph prep[Preparation]
+        direction TB
+        init[[Initialize Run<br/>Reset caches]]
+        recur[[Spawn Recurring Instances]]
+        cleanup[[Unschedule Stale Items]]
+    end
+
+    subgraph intake[Task Intake]
+        direction TB
+        cache_sched[[Merge Busy Sources]]
+        queue((Scheduling Queue))
+        meals_today[[Virtual Meal Blocks]]
+        meals_tmrw[[Tomorrow Meal Blocks]]
+        score[[Score & Sort]]
+    end
+
+    subgraph brain[Dependency Brain]
+        direction TB
+        deps[[Gather Blockers]]
+        ready{Blocker Ready?}
+        wait_loop[[Wait Loop]]
+    end
+
+    subgraph slotting[Slotting Engine]
+        direction TB
+        slots_today[[Collect Today Slots]]
+        batch_today[[Schedule Today]]
+        slots_tmrw[[Collect Tomorrow Slots]]
+        batch_tmrw[[Schedule Tomorrow]]
+    end
+
+    subgraph outputs[Outputs]
+        direction TB
+        record[[Record Results]]
+        digest([Digest Ping<br/>Run Summary]):::actor
+    end
+
+    trigger --> init --> recur --> cleanup --> cache_sched --> queue --> meals_today --> meals_tmrw --> score --> deps --> ready
+    templates --- notion
+    incomplete --- notion
+    notion --- cache_sched
+    calendar --- cache_sched
+    ready -->|Ready| slots_today
+    ready -.->|Wait| wait_loop
+    wait_loop -.-> deps
+    slots_today --> batch_today --> slots_tmrw --> batch_tmrw --> record
+    batch_today --> calendar
+    batch_tmrw --> calendar
+    record --> notion
+    record --> calendar
+    record --> digest
+
+    classDef actor fill:#fff6d6,stroke:#c08a13,color:#5a4100,font-weight:bold
+    classDef data_sources fill:#ffe8cc,stroke:#e07000,color:#4d2a00
+    classDef managers fill:#ede7f6,stroke:#5e35b1,color:#311b92
+    classDef prep fill:#f5f5f5,stroke:#888,color:#222
+    classDef intake fill:#e0f7fa,stroke:#00838f,color:#004d64
+    classDef brain fill:#dfe7ff,stroke:#3451b2,color:#1a2c6d
+    classDef slotting fill:#e6f7ec,stroke:#1f8a4d,color:#0b4a26
+    classDef outputs fill:#f3e6ff,stroke:#7b1fa2,color:#3c0f57
+
+    class trigger,digest actor
+    class templates,incomplete data_sources
+    class notion,calendar managers
+    class init,recur,cleanup prep
+    class cache_sched,queue,meals_today,meals_tmrw,score intake
+    class deps,ready,wait_loop brain
+    class slots_today,batch_today,slots_tmrw,batch_tmrw slotting
+    class record outputs

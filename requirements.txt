@@ -1,0 +1,7 @@
+notion-client==2.7.0
+httpx==0.28.1
+google-api-python-client==2.187.0
+google-auth==2.41.1
+google-auth-oauthlib==1.2.3
+pytest==8.4.2
+tzdata==2025.2

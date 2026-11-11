@@ -1,0 +1,95 @@
+{
+  "notion": {
+    "token": "secret_notion_token",
+    "tasks_database_id": "tasks_database_id",
+    "projects_database_id": "projects_database_id",
+    "properties": {
+      "status": "Status",
+      "auto_schedule": "Auto-Schedule",
+      "scheduled": "Scheduled",
+      "energy_level": "Energy Level",
+      "duration_estimate": "Duration Estimate",
+      "due": "Due",
+      "range": "Range",
+      "last_scheduled": "Last Scheduled",
+      "scheduled_block_id": "Scheduled Block ID",
+      "priority": "Priority",
+      "recurrence_template": "Recurrence Template",
+      "instance_of": "Instance Of",
+      "next_due": "Next Due",
+      "recur_interval": "Recur Interval",
+      "recur_unit": "Recur Unit",
+      "blocking": "Blocking",
+      "blocked_by": "Blocked By"
+    }
+  },
+  "scheduling": {
+    "work_hours_start": 8,
+    "work_hours_end": 22,
+    "default_task_duration_minutes": 60,
+    "buffer_minutes": 10,
+    "timezone": "Europe/Paris",
+    "look_ahead_days": 7,
+    "routine_blocks": [
+      {
+        "id": "lunch",
+        "label": "Lunch Break",
+        "summary": "Lunch Break (auto)",
+        "default_start": "11:45",
+        "earliest": "11:30",
+        "latest": "14:00",
+        "duration_minutes": 45,
+        "priority": "Critical",
+        "description": "Auto-scheduled lunch break",
+        "enabled": true
+      },
+      {
+        "id": "dinner",
+        "label": "Dinner Break",
+        "summary": "Dinner Break (auto)",
+        "default_start": "18:15",
+        "earliest": "18:00",
+        "latest": "20:45",
+        "duration_minutes": 45,
+        "priority": "Critical",
+        "description": "Auto-scheduled dinner break",
+        "enabled": true
+      }
+    ],
+    "priority_weights": {
+      "Critical": 100,
+      "High": 75,
+      "Medium": 50,
+      "Low": 25,
+      "None": 10
+    },
+    "urgency_scores": {
+      "overdue": 200,
+      "due_today": 150,
+      "due_tomorrow": 100,
+      "due_this_week": 75,
+      "future": 50,
+      "no_due_date": 25
+    },
+    "energy_windows": {
+      "Deep Work": [[8, 12], [14, 17]],
+      "Moderate Focus": [[10, 13], [16, 19]],
+      "Light Work": [[7, 9], [18, 22]]
+    }
+  },
+  "google_calendar": {
+    "busy_calendar_ids": [
+      "primary"
+    ],
+    "service_account_file": "service-account.json",
+    "create_events": true,
+    "event_calendar_id": "primary"
+  },
+  "task_durations": {
+    "XS": 15,
+    "S": 30,
+    "M": 60,
+    "L": 120,
+    "XL": 240
+  }
+}
